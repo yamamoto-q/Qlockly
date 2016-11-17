@@ -4,23 +4,35 @@ Blockly.Msg.PROCESS_DATA = {};
 Blockly.Msg.PROCESS_DATA.STRING ="文字型プロセスデータ項目";
 Blockly.Msg.PROCESS_DATA.NUMBER ="数値型プロセスデータ項目";
 Blockly.Msg.PROCESS_DATA.SELECT ="選択型プロセスデータ項目";
+Blockly.Msg.PROCESS_DATA.DATE = "日付型プロセスデータ項目";
+Blockly.Msg.PROCESS_DATA.DATE_TIME = "日時型プロセスデータ項目";
+Blockly.Msg.PROCESS_DATA.Q_USER_VIEW = "ユーザ型プロセスデータ項目";
+Blockly.Msg.PROCESS_DATA.Q_GROUP_VIEW = "組織型プロセスデータ項目";
+Blockly.Msg.PROCESS_DATA.Q_TABLE = "テーブル型プロセスデータ項目";
 
 Blockly.Msg.Q_TYPE = {};
 Blockly.Msg.Q_TYPE.VOID = "[Void]";
 Blockly.Msg.Q_TYPE.STRING = "[String]";
 Blockly.Msg.Q_TYPE.LONG = "[Long]";
 Blockly.Msg.Q_TYPE.ADDABLE_TS = "[AddableTimestamp]";
+Blockly.Msg.Q_TYPE.ADDABLE_DATE = "[AddableDate]";
 Blockly.Msg.Q_TYPE.BIG_DECIMAL = "[BigDecimal]";
 Blockly.Msg.Q_TYPE.ARRAY_LIST = "[ArrayList]";
-
+Blockly.Msg.Q_TYPE.Q_USER_VIEW = "[QuserView]";
+Blockly.Msg.Q_TYPE.Q_GROUP_VIEW = "[QgroupView]";
+Blockly.Msg.Q_TYPE.Q_List_ARRAY = "[ListArray]";
 
 Blockly.Q_IOTYPE = {};
 Blockly.Q_IOTYPE.STRING = "String";
 Blockly.Q_IOTYPE.JAVA_STRING = "java.lang.String";
 Blockly.Q_IOTYPE.LONG = "java.lang.Long";
 Blockly.Q_IOTYPE.ADDABLE_TS = "com.questetra.bpms.util.AddableTimestamp";
+Blockly.Q_IOTYPE.ADDABLE_DATE = "com.questetra.bpms.util.AddableDate";
 Blockly.Q_IOTYPE.BIG_DECIMAL = "java.math.BigDecimal";
 Blockly.Q_IOTYPE.ARRAY_LIST = "java.util.ArrayList";
+Blockly.Q_IOTYPE.Q_USER_VIEW = "com.questetra.bpms.core.event.scripttask.QuserView";
+Blockly.Q_IOTYPE.Q_GROUP_VIEW = "com.questetra.bpms.core.event.scripttask.QgroupView";
+Blockly.Q_IOTYPE.Q_List_ARRAY = "com.questetra.bpms.core.model.formdata.ListArray";
 
 
 /*
@@ -523,17 +535,25 @@ Blockly.JavaScript['data_get_java_util_arraylist'] = function(block) {
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+// -----------------------------------------------------------------------
 // retVal.put() 選択型 java.util.ArrayList
 Blockly.Blocks['retval_put_java_util_arraylist'] = {
     init: function() {
-        this.appendValueInput("NAME")
-            .setCheck(["String", "java.lang.String"])
-            .appendField("選択型プロセスデータ項目");
-        this.appendValueInput("VALUE")
-            .setCheck("java.util.ArrayList")
-            .appendField("(String) に");
         this.appendDummyInput()
-            .appendField("(ArrayList) をセット");
+            .appendField(Blockly.Msg.Q_TYPE.VOID);
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.PROCESS_DATA.SELECT);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendDummyInput()
+            .appendField("に");
+        this.appendValueInput("VALUE")
+            .setCheck(Blockly.Q_IOTYPE.ARRAY_LIST)
+            .appendField(Blockly.Msg.Q_TYPE.ARRAY_LIST);
+        this.appendDummyInput()
+            .appendField("をセット");
+        this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(120);
@@ -548,18 +568,21 @@ Blockly.JavaScript['retval_put_java_util_arraylist'] = function(block) {
     return code;
 };
 
+// -----------------------------------------------------------------------
 // data.get() 日付型　com.questetra.bpms.util.AddableDate
 Blockly.Blocks['data_get_date_com_questetra_bpms_util_addabledate'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField("AddableDate");
-        this.appendValueInput("NAME")
-            .setCheck(["java.lang.String", "String"])
-            .appendField("日付型プロセスデータ項目");
+            .appendField(Blockly.Msg.Q_TYPE.ADDABLE_DATE);
         this.appendDummyInput()
-            .appendField("(String) を取得");
+            .appendField(Blockly.Msg.PROCESS_DATA.DATE);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendDummyInput()
+            .appendField("を取得");
         this.setInputsInline(true);
-        this.setOutput(true, "com.questetra.bpms.util.AddableDate");
+        this.setOutput(true, Blockly.Q_IOTYPE.ADDABLE_DATE);
         this.setColour(120);
         this.setTooltip('日付型プロセスデータ項目の値を取得します （入力が無い場合には null が返されます）');
         this.setHelpUrl('http://www.example.com/');
@@ -571,17 +594,25 @@ Blockly.JavaScript['data_get_date_com_questetra_bpms_util_addabledate'] = functi
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+// -----------------------------------------------------------------------
 // retVal.put() 日付型 java.lang.Long
 Blockly.Blocks['retval_put_date_java_lang_Long'] = {
     init: function() {
-        this.appendValueInput("NAME")
-            .setCheck(["String", "java.lang.String"])
-            .appendField("日付型プロセスデータ項目");
-        this.appendValueInput("VALUE")
-            .setCheck(Blockly.Q_IOTYPE.LONG)
-            .appendField("(String) に");
         this.appendDummyInput()
-            .appendField("(Long) をセット");
+            .appendField(Blockly.Msg.Q_TYPE.VOID);
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.PROCESS_DATA.DATE);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendDummyInput()
+            .appendField("に");
+        this.appendValueInput("VALUE")
+            .setCheck(Blockly.Q_IOTYPE.ADDABLE_DATE)
+            .appendField(Blockly.Msg.PROCESS_DATA.DATE);
+        this.appendDummyInput()
+            .appendField("をセット");
+        this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(120);
@@ -596,18 +627,21 @@ Blockly.JavaScript['retval_put_date_java_lang_Long'] = function(block) {
     return code;
 };
 
+// -----------------------------------------------------------------------
 // data.get() 日時型　com.questetra.bpms.util.AddableDate
 Blockly.Blocks['data_get_datetime_com_questetra_bpms_util_addabledate'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField("AddableDate");
-        this.appendValueInput("NAME")
-            .setCheck(["java.lang.String", "String"])
-            .appendField("日時型プロセスデータ項目");
+            .appendField(Blockly.Msg.Q_TYPE.ADDABLE_DATE);
         this.appendDummyInput()
-            .appendField("(String) を取得");
+            .appendField(Blockly.Msg.PROCESS_DATA.DATE_TIME);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendDummyInput()
+            .appendField("を取得");
         this.setInputsInline(true);
-        this.setOutput(true, "com.questetra.bpms.util.AddableDate");
+        this.setOutput(true, Blockly.Q_IOTYPE.ADDABLE_DATE);
         this.setColour(120);
         this.setTooltip('日時型プロセスデータ項目の値を取得します （入力が無い場合には null が返されます）');
         this.setHelpUrl('http://www.example.com/');
@@ -619,17 +653,25 @@ Blockly.JavaScript['data_get_datetime_java_lang_Long'] = function(block) {
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+// -----------------------------------------------------------------------
 // retVal.put() 日時型 java.lang.Long
 Blockly.Blocks['retval_put_datetime_java_lang_Long'] = {
     init: function() {
-        this.appendValueInput("NAME")
-            .setCheck(["String", "java.lang.String"])
-            .appendField("日時型プロセスデータ項目");
-        this.appendValueInput("VALUE")
-            .setCheck(Blockly.Q_IOTYPE.LONG)
-            .appendField("(String) に");
         this.appendDummyInput()
-            .appendField("(Long) をセット");
+            .appendField(Blockly.Msg.Q_TYPE.VOID);
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.PROCESS_DATA.DATE_TIME);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+         this.appendDummyInput()
+            .appendField("に");
+        this.appendValueInput("VALUE")
+            .setCheck(Blockly.Q_IOTYPE.ADDABLE_DATE)
+            .appendField(Blockly.Msg.Q_TYPE.ADDABLE_DATE);
+        this.appendDummyInput()
+            .appendField("をセット");
+        this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(120);
@@ -644,18 +686,21 @@ Blockly.JavaScript['retval_put_datetime_java_lang_Long'] = function(block) {
     return code;
 };
 
+// -----------------------------------------------------------------------
 // data.get() ユーザー型　com.questetra.bpms.core.event.scripttask.QuserView
 Blockly.Blocks['data_get_com_questetra_bpms_core_event_scripttask_quserview'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField("QuserView");
-        this.appendValueInput("NAME")
-            .setCheck(["java.lang.String", "String"])
-            .appendField("ユーザー型プロセスデータ項目");
+            .appendField(Blockly.Msg.Q_TYPE.Q_USER_VIEW);
         this.appendDummyInput()
-            .appendField("(String) を取得");
+            .appendField(Blockly.Msg.PROCESS_DATA.Q_USER_VIEW);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendDummyInput()
+            .appendField("を取得");
         this.setInputsInline(true);
-        this.setOutput(true, "com.questetra.bpms.core.event.scripttask.QuserView");
+        this.setOutput(true, Blockly.Q_IOTYPE.Q_USER_VIEW);
         this.setColour(120);
         this.setTooltip('ユーザー型プロセスデータ項目の値を取得します （入力が無い場合には null が返されます）');
         this.setHelpUrl('http://www.example.com/');
@@ -666,17 +711,24 @@ Blockly.JavaScript['data_get_com_questetra_bpms_core_event_scripttask_quserview'
     var code = 'data.get(' + value_name + ')';
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
+
+// -----------------------------------------------------------------------
 // retVal.put() ユーザー型 com.questetra.bpms.core.event.scripttask.QuserView
 Blockly.Blocks['retval_put_com_questetra_bpms_core_event_scripttask_quserview'] = {
     init: function() {
-        this.appendValueInput("NAME")
-            .setCheck(["String", "java.lang.String"])
-            .appendField("ユーザー型プロセスデータ項目");
-        this.appendValueInput("VALUE")
-            .setCheck("com.questetra.bpms.core.event.scripttask.QuserView")
-            .appendField("(String) に");
         this.appendDummyInput()
-            .appendField("(QuserView) をセット");
+            .appendField(Blockly.Msg.Q_TYPE.VOID);
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.PROCESS_DATA.Q_USER_VIEW);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendValueInput("VALUE")
+            .setCheck(Blockly.Q_IOTYPE.Q_USER_VIEW)
+            .appendField(Blockly.Msg.Q_TYPE.Q_USER_VIEW);
+        this.appendDummyInput()
+            .appendField("をセット");
+        this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(120);
@@ -691,20 +743,23 @@ Blockly.JavaScript['retval_put_com_questetra_bpms_core_event_scripttask_quservie
     return code;
 };
 
+// -----------------------------------------------------------------------
 // data.get() 組織型　com.questetra.bpms.core.event.scripttask.QgroupView
 Blockly.Blocks['data_get_com_questetra_bpms_core_event_scripttask_qgroupview'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField("QgroupView");
-        this.appendValueInput("NAME")
-            .setCheck(["java.lang.String", "String"])
-            .appendField("組織型プロセスデータ項目");
+            .appendField(Blockly.Msg.Q_TYPE.Q_GROUP_VIEW);
         this.appendDummyInput()
-            .appendField("(String) を取得");
+            .appendField(Blockly.Msg.PROCESS_DATA.Q_GROUP_VIEW);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendDummyInput()
+            .appendField("を取得");
         this.setInputsInline(true);
-        this.setOutput(true, "com.questetra.bpms.core.event.scripttask.QgroupView");
+        this.setOutput(true, Blockly.Q_IOTYPE.Q_GROUP_VIEW);
         this.setColour(120);
-        this.setTooltip('組織型プロセスデータ項目の値を取得します > com.questetra.bpms.core.event.scripttask.QgroupView（入力が無い場合には null が返されます）');
+        this.setTooltip('組織型プロセスデータ項目の値を取得します （入力が無い場合には null が返されます）');
         this.setHelpUrl('http://www.example.com/');
     }
 };
@@ -714,17 +769,24 @@ Blockly.JavaScript['dadata_get_com_questetra_bpms_core_event_scripttask_qgroupvi
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+// -----------------------------------------------------------------------
 // retVal.put() 組織型 com.questetra.bpms.core.event.scripttask.QgroupView
 Blockly.Blocks['retval_put_com_questetra_bpms_core_event_scripttask_qgroupview'] = {
     init: function() {
-        this.appendValueInput("NAME")
-            .setCheck(["String", "java.lang.String"])
-            .appendField("組織型プロセスデータ項目");
-        this.appendValueInput("VALUE")
-            .setCheck("com.questetra.bpms.core.event.scripttask.QgroupView")
-            .appendField("(String) に");
         this.appendDummyInput()
-            .appendField("(QgroupView) をセット");
+            .appendField(Blockly.Msg.Q_TYPE.VOID);
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.PROCESS_DATA.Q_GROUP_VIEW);
+        this.appendValueInput("NAME")
+            this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendValueInput("VALUE")
+            .setCheck(Blockly.Q_IOTYPE.Q_GROUP_VIEW)
+            .appendField(Blockly.Msg.Q_TYPE.Q_GROUP_VIEW);
+        this.appendDummyInput()
+            .appendField("をセット");
+        this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(120);
@@ -739,18 +801,21 @@ Blockly.JavaScript['retval_put_com_questetra_bpms_core_event_scripttask_qgroupvi
     return code;
 };
 
+// -----------------------------------------------------------------------
 // data.get() テーブル型　com.questetra.bpms.core.model.formdata.ListArray
 Blockly.Blocks['data_get_com_questetra_bpms_core_model_formdata_listarray'] = {
     init: function() {
-        this.appendDummyInput('ListArray')
-            .appendField("QgroupView");
-        this.appendValueInput("NAME")
-            .setCheck(["java.lang.String", "String"])
-            .appendField("テーブル型プロセスデータ項目");
         this.appendDummyInput()
-            .appendField("(String) を取得");
+            .appendField(Blockly.Msg.Q_TYPE.Q_List_ARRAY);
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.PROCESS_DATA.Q_TABLE);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendDummyInput()
+            .appendField("を取得");
         this.setInputsInline(true);
-        this.setOutput(true, "com.questetra.bpms.core.model.formdata.ListArray");
+        this.setOutput(true, Blockly.Q_IOTYPE.Q_List_ARRAY);
         this.setColour(120);
         this.setTooltip('テーブル型プロセスデータ項目の値を取得します （入力が無い場合には null が返されます）');
         this.setHelpUrl('http://www.example.com/');
@@ -762,17 +827,25 @@ Blockly.JavaScript['data_get_com_questetra_bpms_core_model_formdata_listarray'] 
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+// -----------------------------------------------------------------------
 // retVal.put() テーブル型 com.questetra.bpms.core.model.formdata.ListArray
 Blockly.Blocks['retval_put_com_questetra_bpms_core_model_formdata_listarray'] = {
     init: function() {
-        this.appendValueInput("NAME")
-            .setCheck(["String", "java.lang.String"])
-            .appendField("組織型プロセスデータ項目");
-        this.appendValueInput("VALUE")
-            .setCheck("com.questetra.bpms.core.model.formdata.ListArray")
-            .appendField("(String) に");
         this.appendDummyInput()
-            .appendField("(ListArray) をセット");
+            .appendField(Blockly.Msg.Q_TYPE.VOID);
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.PROCESS_DATA.Q_TABLE);
+        this.appendValueInput("NAME")
+            .setCheck([Blockly.Q_IOTYPE.JAVA_STRING, Blockly.Q_IOTYPE.STRING])
+            .appendField(Blockly.Msg.Q_TYPE.STRING);
+        this.appendDummyInput()
+            .appendField("に");
+        this.appendValueInput("VALUE")
+            .setCheck(Blockly.Q_IOTYPE.Q_List_ARRAY)
+            .appendField(Blockly.Msg.Q_TYPE.Q_List_ARRAY);
+        this.appendDummyInput()
+            .appendField("をセット");
+        this.setInputsInline(true);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(120);
@@ -787,271 +860,6 @@ Blockly.JavaScript['retval_put_com_questetra_bpms_core_model_formdata_listarray'
     return code;
 };
 
-// -----------------------------------
-// 選択型
-// new java.util.ArrayList()
-Blockly.Blocks['new_java_util_arraylist'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField("ArrayList");
-        this.appendDummyInput()
-            .appendField("新規");
-        this.appendValueInput("Collection|initialCapacity")
-            .setCheck(["com.questetra.bpms.core.select.Item", "Number"]) //ToDo
-            .appendField("[Item|初期サイズ]");
-        this.setInputsInline(true);
-        this.setOutput(true, "java.util.ArrayList");
-        this.setColour(120);
-        this.setTooltip('');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['new_java_util_arraylist'] = function(block) {
-    var value_collection_initialcapacity = Blockly.JavaScript.valueToCode(block, 'Collection|initialCapacity', Blockly.JavaScript.ORDER_NONE);
-    var code = 'new java.util.ArrayList(' + value_collection_initialcapacity + ')';
-    return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
-
-// new java.util.ArrayList()
-Blockly.Blocks['java_util_arraylist_get'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField("Item");
-        this.appendValueInput("java.util.ArrayList")
-            .setCheck(null)
-            .appendField("ArrayList");
-        this.appendDummyInput()
-            .appendField(new Blockly.FieldCheckbox("TRUE"), "parse");
-        this.appendValueInput("index")
-            .setCheck("Number")
-            .appendField("の位置");
-        this.appendDummyInput()
-            .appendField("にあるItem");
-        this.setInputsInline(true);
-        this.setOutput(true, "com.questetra.bpms.core.select.Item");
-        this.setColour(120);
-        this.setTooltip('ArrayListに格納された、Itemのうち、指定した位置（index）のItemを取得します');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['java_util_arraylist_get'] = function(block) {
-    var value_java_util_arraylist = Blockly.JavaScript.valueToCode(block, 'java.util.ArrayList', Blockly.JavaScript.ORDER_NONE);
-    var checkbox_parse = block.getFieldValue('parse') == 'TRUE';
-    var value_index = Blockly.JavaScript.valueToCode(block, 'index', Blockly.JavaScript.ORDER_NONE);
-    if (checkbox_parse) {
-        var code = 'new java.util.ArrayList(' + value_java_util_arraylist + ').get(' + value_index + ')';
-    } else {
-        var code = value_java_util_arraylist + '.get(' + value_index + ')';
-    }
-    return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
-
-// new com.questetra.bpms.core.select.Item()
-Blockly.Blocks['com_questetra_bpms_core_select_item'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField("Item");
-        this.appendDummyInput()
-            .appendField("新規");
-        this.appendValueInput("NAME")
-            .setCheck(["String", "java.lang.String"])
-            .appendField("表示ラベル");
-        this.appendDummyInput()
-            .appendField("(String)");
-        this.appendValueInput("value")
-            .setCheck(["String", "java.lang.String"])
-            .appendField("選択肢ID");
-        this.appendDummyInput()
-            .appendField("(String)");
-        this.setInputsInline(true);
-        this.setOutput(true, "com.questetra.bpms.core.select.Item");
-        this.setColour(120);
-        this.setTooltip('');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-
-Blockly.JavaScript['com_questetra_bpms_core_select_item'] = function(block) {
-    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_NONE);
-    var value_value = Blockly.JavaScript.valueToCode(block, 'value', Blockly.JavaScript.ORDER_NONE);
-    if (value_name && value_value) {
-        var code = 'new com.questetra.bpms.core.select.Item(' + value_value + ', ' + value_name + ')';
-    } else {
-        var code = 'new com.questetra.bpms.core.select.Item()';
-    }
-    return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
-
-//　com.questetra.bpms.core.select.Item.toString()
-Blockly.Blocks['com_questetra_bpms_core_select_item_tostring'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField(Blockly.Msg.Q_TYPE.STRING);
-        this.appendValueInput("com.questetra.bpms.core.select.Item")
-            .setCheck("com.questetra.bpms.core.select.Item")
-            .appendField("Item");
-        this.appendDummyInput()
-            .appendField("の文字表現");
-        this.setInputsInline(true);
-        this.setOutput(true, Blockly.Q_IOTYPE.STRING);
-        this.setColour(120);
-        this.setTooltip('例) item{value=[選択肢ID], display=[表示ラベル]}');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['com_questetra_bpms_core_select_item_tostring'] = function(block) {
-    var value_com_questetra_bpms_core_select_item = Blockly.JavaScript.valueToCode(block, 'com.questetra.bpms.core.select.Item', Blockly.JavaScript.ORDER_NONE);
-    var code = value_com_questetra_bpms_core_select_item + '.toString()';
-    return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
-
-//　com.questetra.bpms.core.select.Item.getValue()
-Blockly.Blocks['com_questetra_bpms_core_select_item_getvalue'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField(Blockly.Msg.Q_TYPE.STRING);
-        this.appendValueInput("com.questetra.bpms.core.select.Item")
-            .setCheck("com.questetra.bpms.core.select.Item")
-            .appendField("Item");
-        this.appendDummyInput()
-            .appendField("の選択肢ID");
-        this.setInputsInline(true);
-        this.setOutput(true, Blockly.Q_IOTYPE.STRING);
-        this.setColour(120);
-        this.setTooltip('');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['com_questetra_bpms_core_select_item_getvalue'] = function(block) {
-    var value_com_questetra_bpms_core_select_item = Blockly.JavaScript.valueToCode(block, 'com.questetra.bpms.core.select.Item', Blockly.JavaScript.ORDER_NONE);
-    var code = value_com_questetra_bpms_core_select_item + '.getValue()';
-    return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
-
-//　com.questetra.bpms.core.select.Item.getDisplay()
-Blockly.Blocks['com_questetra_bpms_core_select_item_getdisplay'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField(Blockly.Msg.Q_TYPE.STRING);
-        this.appendValueInput("com.questetra.bpms.core.select.Item")
-            .setCheck("com.questetra.bpms.core.select.Item")
-            .appendField("Item");
-        this.appendDummyInput()
-            .appendField("の表示ラベル");
-        this.setInputsInline(true);
-        this.setOutput(true, Blockly.Q_IOTYPE.STRING);
-        this.setColour(120);
-        this.setTooltip('');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['com_questetra_bpms_core_select_item_getdisplay'] = function(block) {
-    var value_com_questetra_bpms_core_select_item = Blockly.JavaScript.valueToCode(block, 'com.questetra.bpms.core.select.Item', Blockly.JavaScript.ORDER_NONE);
-    var code = value_com_questetra_bpms_core_select_item + '.getDisplay()';
-    return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
-
-//　com.questetra.bpms.core.select.Item.setValue()
-Blockly.Blocks['com_questetra_bpms_core_select_item_setvalue'] = {
-    init: function() {
-        this.appendValueInput("com.questetra.bpms.core.select.Item")
-            .setCheck(null)
-            .appendField("Item");
-        this.appendValueInput("value")
-            .setCheck("String")
-            .appendField("(Item) に選択肢ID");
-                this.appendDummyInput()
-            .appendField("(String) をセットする");
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(120);
-        this.setTooltip('選択肢IDをセットする Itemの型を担保できないので注意');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['com_questetra_bpms_core_select_item_setvalue'] = function(block) {
-    var value_value = Blockly.JavaScript.valueToCode(block, 'value', Blockly.JavaScript.ORDER_ATOMIC);
-    var value_com_questetra_bpms_core_select_item = Blockly.JavaScript.valueToCode(block, 'com.questetra.bpms.core.select.Item', Blockly.JavaScript.ORDER_ATOMIC);
-    var code = value_com_questetra_bpms_core_select_item + '.setValue(' + value_value + ');\n';
-    return code;
-};
-
-//　com.questetra.bpms.core.select.Item.setDisplay()
-Blockly.Blocks['com_questetra_bpms_core_select_item_setdisplay'] = {
-    init: function() {
-        this.appendValueInput("com.questetra.bpms.core.select.Item")
-            .setCheck(null)
-            .appendField("Item");
-        this.appendValueInput("display")
-            .setCheck("String")
-            .appendField("(Item) に表示ラベル");
-        this.appendDummyInput()
-            .appendField("(String) をセットする");
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(120);
-        this.setTooltip('表示ディスプレイをセットする Itemの型を担保できないので注意');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['com_questetra_bpms_core_select_item_setdisplay'] = function(block) {
-    var value_display = Blockly.JavaScript.valueToCode(block, 'display', Blockly.JavaScript.ORDER_ATOMIC);
-    var value_com_questetra_bpms_core_select_item = Blockly.JavaScript.valueToCode(block, 'com.questetra.bpms.core.select.Item', Blockly.JavaScript.ORDER_ATOMIC);
-    var code = value_com_questetra_bpms_core_select_item + '.setDisplay(' + value_display + ');\n';
-    return code;
-};
-
-// com_questetra_bpms_core_select_item_isvalid.isValid()
-Blockly.Blocks['com_questetra_bpms_core_select_item_isvalid'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField("Boolean");
-        this.appendValueInput("com.questetra.bpms.core.select.Item")
-            .setCheck(null)
-            .appendField("Item");
-        this.appendDummyInput()
-            .appendField("(Item) の有効/無効判定");
-        this.setInputsInline(true);
-        this.setOutput(true, "Boolean");
-        this.setColour(120);
-        this.setTooltip('有効な選択肢かどうか返す 選択肢ID か 表示ラベル が空の場合 false');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['com_questetra_bpms_core_select_item_isvalid'] = function(block) {
-    var value_com_questetra_bpms_core_select_item = Blockly.JavaScript.valueToCode(block, 'com.questetra.bpms.core.select.Item', Blockly.JavaScript.ORDER_NONE);
-    var code = value_com_questetra_bpms_core_select_item + '.isValid()';
-    return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
-
-// com.questetra.bpms.core.select.Item.equals()
-Blockly.Blocks['com_questetra_bpms_core_select_item_equals'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField("Boolean");
-        this.appendValueInput("com.questetra.bpms.core.select.ItemA")
-            .setCheck(null)
-            .appendField("Item A");
-        this.appendValueInput("com.questetra.bpms.core.select.ItemB")
-            .setCheck(null)
-            .appendField("(Item) と Item B");
-        this.appendDummyInput()
-            .appendField("(Item) が同じかどうか");
-        this.setInputsInline(true);
-        this.setOutput(true, "Boolean");
-        this.setColour(120);
-        this.setTooltip('同じかどうかを判定する');
-        this.setHelpUrl('http://www.example.com/');
-    }
-};
-Blockly.JavaScript['com_questetra_bpms_core_select_item_equals'] = function(block) {
-    var value_com_questetra_bpms_core_select_itema = Blockly.JavaScript.valueToCode(block, 'com.questetra.bpms.core.select.ItemA', Blockly.JavaScript.ORDER_NONE);
-    var value_com_questetra_bpms_core_select_itemb = Blockly.JavaScript.valueToCode(block, 'com.questetra.bpms.core.select.ItemB', Blockly.JavaScript.ORDER_NONE);
-    var code = value_com_questetra_bpms_core_select_itema + '.equals(' + value_com_questetra_bpms_core_select_itemb + ')';
-    return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
 
 // -----------------------------------------
 // 日付型
